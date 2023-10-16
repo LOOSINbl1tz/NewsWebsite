@@ -5,6 +5,7 @@ from .models import NewsTopics, GetNews
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from .news_api_call import NewsFetcher
 
 # Create your views here.
 class TopicsGetAll(viewsets.ModelViewSet):
@@ -16,10 +17,12 @@ class TopicsGetAll(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def news(self,request,pk=None):
         try:
-            topic_id = NewsTopics.objects.get(pk=pk)
-            news_all = GetNews.objects.filter(topic_id=topic_id)
-            news_all_serializer = NewsSerializer(news_all, many=True, context = {'request':request})
-            return Response(news_all_serializer.data)
+            topic_name = NewsTopics.objects.get(pk=pk)
+            news_net = NewsFetcher(topic_name)
+            news_net_data = news_net.getNews()
+            # news_all = GetNews.objects.filter(topic_id=topic_name)
+            # news_all_serializer = NewsSerializer(news_all, many=True, context = {'request':request})
+            return Response(news_net_data)
         except:
             return Response({
                 'Error':NotFound.default_code,
