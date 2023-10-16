@@ -1,20 +1,36 @@
 
 import './App.css';
 import { Navbar } from './components/Navbar';
-import { Home } from './components/Home';
+// import { Home } from './components/Home';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+// import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route,
+//   Link
+// } from "react-router-dom";
 
 function App() {
   return (
     <>
+    {/* <Router> */}
     <Navbar/>
-    <h1>This is iNotebook</h1>
+    {/* <Home/> */}
+    {/* <Switch>
+    <Route path="/">
+            <Home />
+
+          <Route exact path="/about">
+            <About />
+          </Route>
+          
+          <Route exact path="/users">
+            <Users />
+          </Route>
+          
+          </Route>
+        </Switch>
+    </Router> */}
     </>
   );
 }
