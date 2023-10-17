@@ -6,6 +6,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from .news_api_call import NewsFetcher
+from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import APIException
+
+class SomethingWentWrong(APIException):
+    status_code = 504
+    default_detail = 'Oops! Something went wrong.'
+
 
 # Create your views here.
 class TopicsGetAll(viewsets.ModelViewSet):
@@ -17,16 +25,28 @@ class TopicsGetAll(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def news(self,request,pk=None):
         try:
-            topic_name = NewsTopics.objects.get(pk=pk)
-            news_net = NewsFetcher(topic_name)
-            news_net_data = news_net.getNews()
-            # news_all = GetNews.objects.filter(topic_id=topic_name)
-            # news_all_serializer = NewsSerializer(news_all, many=True, context = {'request':request})
+            topic_name = str(NewsTopics.objects.get(pk=pk))
+            cache_data = cache.get(topic_name)
+            news_net_data = None
+            
+            if cache_data is None:
+                news_net = NewsFetcher(topic_name)
+                news_net_data = news_net.getNews()
+                cache.set(topic_name,news_net_data, timeout=21600)
+
+            else:
+                news_net_data = cache_data
+                print(0/0)
+
             return Response(news_net_data)
-        except:
+        
+        except ObjectDoesNotExist:
             return Response({
                 'Error':NotFound.default_code,
             })
+        
+        except Exception as e:
+            raise SomethingWentWrong
 
 class TopicsCreate(viewsets.ModelViewSet):
     serializer_class = TopicsAllSerializer

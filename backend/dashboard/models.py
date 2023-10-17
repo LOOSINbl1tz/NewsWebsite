@@ -10,6 +10,7 @@ class NewsTopics(models.Model):
 
 class GetNews(models.Model):
     topic_id = models.ForeignKey(NewsTopics,on_delete=models.CASCADE)
+    article_id = models.CharField(max_length=500,unique=True,null=True)
     news_title = models.CharField(max_length=255)
     news_body = models.TextField(max_length=10000)
     date_time = models.DateTimeField(auto_now_add=True)
