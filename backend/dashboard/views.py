@@ -36,7 +36,6 @@ class TopicsGetAll(viewsets.ModelViewSet):
 
             else:
                 news_net_data = cache_data
-                print(0/0)
 
             return Response(news_net_data)
         
