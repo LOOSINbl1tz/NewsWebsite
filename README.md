@@ -1,5 +1,6 @@
 # NewsWebsite
-Basic news webapp
+Basic news webapp<br>
+<h1>API Endpoints</h1>
 
 <table border="1">
         <tr>
