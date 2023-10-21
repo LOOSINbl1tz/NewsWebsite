@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'dashboard',
+    'natural',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # <-- Move this line up
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -137,6 +139,8 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL=True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://172.20.40.169:3000' 

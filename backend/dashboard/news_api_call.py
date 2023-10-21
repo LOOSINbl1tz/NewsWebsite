@@ -2,11 +2,11 @@ from newsdataapi import NewsDataApiClient
 import requests
 
 class NewsFetcher:
-    def __init__(self,keyword) -> None:
+    def __init__(self,keyword,pk=None) -> None:
         self.key = 'pub_31284c9a4a173267fcdea6f4e3ee581d42fb4'
         self.client = NewsDataApiClient(self.key)
         self.query = keyword
-
+        self.topic_id = int(pk)
     def getFiltered(self, data):
         new_data = []
         for contents in data:
@@ -19,6 +19,7 @@ class NewsFetcher:
                 date_time = contents['pubDate']
                 link = contents['link']
                 creator = contents['creator']
+                # d['topic_id'] = news_topic_instance
                 d['article_id'] = article_id
                 d['news_title'] = news_title
                 d['news_body'] = news_body
