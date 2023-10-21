@@ -1,9 +1,32 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 export const Navbar = () => {
+  const [newsCategory, setNewsCategory] = useState([]);
+  useEffect(() => {
+    const fetchData = async (e) => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/home/readtopics');
+        console.log(response);
+        const topics = response.data;
+        const topicNames = topics.map(topic => topic.topic_name);
+        setNewsCategory(topicNames);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle the error here
+      }
+    };
+    fetchData();
+  }, []);
+
+
+    
+
+  console.log(newsCategory);
   return (
     <>
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg bg-body-tertiary h-10">
   <div className="container-fluid">
     {/* <a className="navbar-brand" href="/">Navbar</a> */}
     {/* <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> */}
@@ -21,7 +44,17 @@ export const Navbar = () => {
           <a className="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Dropdown
           </a>
-          <ul className="dropdown-menu">
+          <ul className='dropdown-menu'>
+            {newsCategory.map((category, index) => {
+              return (
+                <li key={index}>
+                  <Link className="dropdown-item" to={`/${category}`}>{category}</Link>
+                </li>
+              )
+            })}
+          </ul>
+
+          {/* <ul className="dropdown-menu">
             <li><Link className="dropdown-item" to="/Topstories">Top Stories News</Link></li>
             <li><Link className="dropdown-item" to="/Weather">Weather</Link></li>
             <li><Link className="dropdown-item" to="/Economy">Economy</Link></li>
@@ -30,7 +63,7 @@ export const Navbar = () => {
             <li><hr className="dropdown-divider"/></li>
             <li><a className="dropdown-item" href="/">More</a></li>
 
-          </ul>
+          </ul> */}
         </li>
         
       </ul>

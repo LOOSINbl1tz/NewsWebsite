@@ -1,14 +1,14 @@
 import React from 'react'
 import axios from 'axios';
 import { useState,useEffect } from 'react';
-export const Weather = () => {
-  const [newsData, setNewsData] = useState([]);
+export const Politics = () => {
+    const [newsData, setNewsData] = useState([]);
 
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get('http://127.0.0.1:8000/home/readtopics/3/news/');
+          const response = await axios.get('http://127.0.0.1:8000/home/readtopics/2/news/');
           setNewsData(response.data);
         } catch (error) {
           console.error('Error fetching data:', error);
