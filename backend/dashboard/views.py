@@ -32,6 +32,11 @@ class TopicsGetAll(viewsets.ModelViewSet):
             if cache_data is None:
                 news_net = NewsFetcher(topic_name)
                 news_net_data = news_net.getNews()
+                # save_data = {''}
+                
+                # save_news = GetNews()
+                
+                # save_news.save(news_net_data)
                 cache.set(topic_name,news_net_data, timeout=21600)
 
             else:
