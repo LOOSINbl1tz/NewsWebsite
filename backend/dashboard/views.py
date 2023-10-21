@@ -9,6 +9,8 @@ from .news_api_call import NewsFetcher
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import APIException
+from natural.models import SummerizedData
+from natural.text_summerizer import summerizer
 
 class SomethingWentWrong(APIException):
     status_code = 504
@@ -30,13 +32,29 @@ class TopicsGetAll(viewsets.ModelViewSet):
             news_net_data = None
             
             if cache_data is None:
-                news_net = NewsFetcher(topic_name)
+                news_net = NewsFetcher(topic_name,pk)
                 news_net_data = news_net.getNews()
-                # save_data = {''}
-                
-                # save_news = GetNews()
-                
-                # save_news.save(news_net_data)
+                news_topic_instance  = NewsTopics.objects.get(pk=pk)
+
+                for i in news_net_data:
+                    try:
+                        data_sum = {}
+                        data_sum['id'] = i['article_id']
+                        sum_data = i['news_body']
+                        sum_data = summerizer(sum_data)
+                        data_sum['sum_content'] = sum_data
+                        data_sum['news_topic'] = topic_name
+                        save_sum_news = SummerizedData(**data_sum)
+                        save_sum_news.save()
+                    except:
+                        raise Exception
+
+                for i in news_net_data:
+                    try:
+                        save_news = GetNews(topic_id = news_topic_instance,**i)
+                        save_news.save()
+                    except Exception as e:
+                        raise e
                 cache.set(topic_name,news_net_data, timeout=21600)
 
             else:
@@ -49,8 +67,8 @@ class TopicsGetAll(viewsets.ModelViewSet):
                 'Error':NotFound.default_code,
             })
         
-        except Exception as e:
-            raise SomethingWentWrong
+        # except Exception as e:
+        #     raise SomethingWentWrong
 
 class TopicsCreate(viewsets.ModelViewSet):
     serializer_class = TopicsAllSerializer
